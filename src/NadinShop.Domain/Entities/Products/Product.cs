@@ -23,7 +23,9 @@ public class Product():AggregateRoot<Guid>(Guid.NewGuid())
     public static Product Create(string name, string manufacturePhone, string manufactureEmail, bool isAvailable)
     {
 
+        //TODO: 
+        return new Product(name,manufacturePhone,manufactureEmail, isAvailable);
     }
     //Methods
-
+    //TODO: 
 }
