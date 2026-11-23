@@ -1,6 +1,3 @@
 namespace NadinShop.Domain.Common;
 
-public class DomainException
-{
-    
-}
+public class DomainException(string message):Exception(message);
