@@ -1,13 +1,16 @@
-using System.Diagnostics;
-using System.Security.AccessControl;
-
 namespace NadinShop.Domain.Common;
 
-public abstract class Entity<TId>(TId id) : IEquatable<Entity<TId>>
+public abstract class Entity<TId> : IEquatable<Entity<TId>>
     where TId : notnull
 {
+    //Value property
+    public TId Id { get; protected set; } 
+    //Constructor
+    protected Entity(TId id)=>this.Id  = id;
 
-    public TId Id { get; protected set; } = id;
+    protected Entity(){}//for ef
+
+    //Operators
     public static bool operator == (Entity<TId>? left, Entity<TId>? right){
         return Equals(left, right);
     }
@@ -16,7 +19,7 @@ public abstract class Entity<TId>(TId id) : IEquatable<Entity<TId>>
     {
         return !(left == right);
     }
-
+    //Base methods
     public bool Equals(Entity<TId>? other)
     {
         return other is not null
