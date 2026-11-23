@@ -1,0 +1,77 @@
+using NadinShop.Domain.Entities.Products.ValueObjects;
+
+namespace NadinShop.Domain.Tests.Entities.Products.ValueObjects;
+
+public class ManufacturePhoneTests
+{
+    [Theory]
+    [InlineData("09121234567")]
+    [InlineData("+989121234567")]
+    [InlineData("0912 123 4567")]
+    [InlineData("0912-123-4567")]
+    [InlineData("0912(123)4567")]
+    [InlineData("1234567")]
+    [InlineData("123456789012345")]
+    public void Create_accepts_valid_phone_numbers(string input)
+    {
+        var phone = ManufacturePhone.Create(input);
+
+        Assert.Equal(input, phone.Value);
+    }
+
+    [Fact]
+    public void Create_trims_surrounding_whitespace()
+    {
+        var phone = ManufacturePhone.Create("  09121234567  ");
+
+        Assert.Equal("09121234567", phone.Value);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Create_throws_when_value_is_empty(string? value)
+    {
+        Assert.Throws<ManufacturePhoneCannotBeEmptyException>(() => ManufacturePhone.Create(value));
+    }
+
+    [Theory]
+    [InlineData("123456")]
+    [InlineData("1234567890123456")]
+    [InlineData("0912 12")]
+    public void Create_throws_when_digit_count_is_out_of_range(string value)
+    {
+        Assert.Throws<ManufacturePhoneLengthIsInvalidException>(() => ManufacturePhone.Create(value));
+    }
+
+    [Theory]
+    [InlineData("abc1234567")]
+    [InlineData("0912abc4567")]
+    [InlineData("0912+1234567")]
+    [InlineData("0912/1234567")]
+    [InlineData("(0912)1234567")]
+    public void Create_throws_when_format_is_invalid(string value)
+    {
+        Assert.Throws<ManufacturePhoneFormatIsInvalidException>(() => ManufacturePhone.Create(value));
+    }
+
+    [Fact]
+    public void ManufacturePhones_with_same_value_are_equal()
+    {
+        var first = ManufacturePhone.Create("09121234567");
+        var second = ManufacturePhone.Create(" 09121234567 ");
+
+        Assert.Equal(first, second);
+        Assert.Equal(first.GetHashCode(), second.GetHashCode());
+    }
+
+    [Fact]
+    public void ManufacturePhones_with_different_values_are_not_equal()
+    {
+        var first = ManufacturePhone.Create("09121234567");
+        var second = ManufacturePhone.Create("09121234568");
+
+        Assert.NotEqual(first, second);
+    }
+}
