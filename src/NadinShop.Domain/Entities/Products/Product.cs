@@ -1,30 +1,46 @@
 using NadinShop.Domain.Common;
+using NadinShop.Domain.Entities.Products.ValueObjects;
 
 namespace NadinShop.Domain.Entities.Products;
 
-public class Product():AggregateRoot<Guid>(Guid.NewGuid())
+public class Product:AggregateRoot<Guid>
 {
     //Properties
-    public string Name { get; private set; } = null!;
-    public DateTime ProductDate { get; private set; }
-    public string ManufacturePhone { get; private set; } = null!;
-    public string ManufactureEmail { get; private set; } = null!;
+    public ProductName Name { get; private set; } = null!;
+    public ProduceDate ProduceDate { get; private set; }
+    public ManufacturePhone ManufacturePhone { get; private set; } = null!;
+    public ManufactureEmail ManufactureEmail { get; private set; } = null!;
     public bool IsAvailable { get; private set; }
-    //Constructor
-    private Product(string name,string manufacturePhone,string manufactureEmail,bool isAvailable):this()
+    
+    // Constructor
+    public Product() { }//For Ef
+    private Product(
+        ProductName name,
+        ProduceDate produceDate,
+        ManufacturePhone manufacturePhone,
+        ManufactureEmail manufactureEmail,
+        bool isAvailable) : base(Guid.NewGuid())
     {
-        this.Name = name;
-        this.ProductDate = DateTime.Now;
-        this.ManufacturePhone = manufacturePhone;
-        this.ManufactureEmail = manufactureEmail;
-        this.IsAvailable = isAvailable;
+        Name = name;
+        ProduceDate = produceDate;
+        ManufacturePhone = manufacturePhone;
+        ManufactureEmail = manufactureEmail;
+        IsAvailable = isAvailable;
     }
-    //Factory method
-    public static Product Create(string name, string manufacturePhone, string manufactureEmail, bool isAvailable)
-    {
 
-        //TODO: 
-        return new Product(name,manufacturePhone,manufactureEmail, isAvailable);
+    // Factory method
+    public static Product Create(
+        string name,
+        string manufacturePhone,
+        string manufactureEmail,
+        bool isAvailable)
+    {
+        return new Product(
+            ProductName.Create(name),
+            ProduceDate.Create(DateTime.UtcNow),
+            ManufacturePhone.Create(manufacturePhone),
+            ManufactureEmail.Create(manufactureEmail),
+            isAvailable);
     }
     //Methods
     //TODO: 
