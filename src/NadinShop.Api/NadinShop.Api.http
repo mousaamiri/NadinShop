@@ -1,0 +1,6 @@
+@NadinShop.Api_HostAddress = http://localhost:5081
+
+GET {{NadinShop.Api_HostAddress}}/health
+Accept: application/json
+
+###
