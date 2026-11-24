@@ -1,12 +1,42 @@
+using NadinShop.Application.Common.Interfaces;
 using NadinShop.Application.Common.Messaging;
 using NadinShop.Application.Common.ResultPattern;
+using NadinShop.Application.Common.Services;
+using NadinShop.Application.Features.Products.Common;
+using NadinShop.Domain.Entities.Products;
 
 namespace NadinShop.Application.Features.Products.Commands.Create;
 
-public class CreateProductCommandHandler: ICommandHandler<CreateProductCommand, CreateProductResponse>
+public class CreateProductCommandHandler(
+    IProductRepository productRepository,
+    ICurrentUserService currentUserService)
+    : ICommandHandler<CreateProductCommand, CreateProductResponse>
 {
-    public Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreateProductResponse>> Handle(
+        CreateProductCommand request,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var currentUser = await currentUserService.GetCurrentUserAsync(cancellationToken);
+        if (currentUser is null)
+            return Error.Unauthorized("Error.Unauthenticated", "User is not authenticated.");
+
+        var existingProduct = await productRepository.GetByNameAsync(request.Name, cancellationToken);
+        if (existingProduct is not null)
+            return Error.Conflict("Error.ProductNameAlreadyExists", "A product with the same name already exists.");
+
+        var product = Product.Create(
+            request.Name,
+            currentUser.Phone,
+            currentUser.Email,
+            isAvailable: true);
+
+        productRepository.Add(product);
+
+        return new CreateProductResponse(
+            product.Id,
+            product.Name.Value,
+            product.ManufacturePhone.Value,
+            product.ManufactureEmail.Value,
+            product.ProduceDate.Value);
     }
 }
