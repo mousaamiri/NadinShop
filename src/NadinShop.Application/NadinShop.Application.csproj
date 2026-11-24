@@ -12,6 +12,12 @@
 
   <ItemGroup>
     <Folder Include="Common\Services\" />
+    <Folder Include="Features\Common\" />
+    <Folder Include="Features\Products\Commands\Delete\" />
+    <Folder Include="Features\Products\Commands\Update\" />
+    <Folder Include="Features\Products\Dtos\" />
+    <Folder Include="Features\Products\Queries\GetById\" />
+    <Folder Include="Features\Products\Queries\Get\" />
   </ItemGroup>
 
 </Project>
