@@ -38,7 +38,12 @@ public class Result
 
     public static Result<TValue> Create<TValue>(TValue? value) =>
         value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
-
+    public static Result WithErrors(Error[] errors)
+    {
+        if (errors.Length == 0) return Success();
+        // If multiple errors, take the first one or merge it
+        return errors[0];
+    }
     #endregion
 
     #region Operators
@@ -61,6 +66,11 @@ public class Result<TValue> : Result
     public TValue Value => IsSuccess
         ? _value!
         : throw new InvalidOperationException("The value of a failed result cannot be accessed.");
-
+    public new static Result<TValue> WithErrors(Error[] errors)
+    {
+        if (errors.Length == 0) return Success<TValue>(default!);
+        return errors[0];
+    }
     public static implicit operator Result<TValue>(TValue? value) => Create(value);
+    public static implicit operator Result<TValue>(Error error) => Failure<TValue>(error);
 }
