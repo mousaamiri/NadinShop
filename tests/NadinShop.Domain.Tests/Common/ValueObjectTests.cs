@@ -5,7 +5,7 @@ namespace NadinShop.Domain.Tests.Common;
 public class ValueObjectTests
 {
     [Fact]
-    public void ValueObjects_of_same_type_and_same_value_are_equals()
+    public void Equals_SameTypeAndValue_ReturnsTrue()
     {
         string productName = "Product Name";
         var first = new TestValueObject(productName);
@@ -15,7 +15,7 @@ public class ValueObjectTests
         Assert.Equal(first.GetHashCode(),second.GetHashCode());
     }
     [Fact]
-    public void ValueObjects_with_different_value_are_not_equals()
+    public void Equals_DifferentValues_ReturnsFalse()
     {
         var first = new TestValueObject("Product 1");
         var second = new TestValueObject("Product 2");

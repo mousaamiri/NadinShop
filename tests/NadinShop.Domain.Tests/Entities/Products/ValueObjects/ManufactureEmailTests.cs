@@ -10,7 +10,7 @@ public class ManufactureEmailTests
     [InlineData("user@sub.domain.com")]
     [InlineData("a@b.co")]
     [InlineData("first.last@example.com")]
-    public void Create_accepts_valid_emails(string input)
+    public void Create_ValidEmail_ReturnsEmail(string input)
     {
         var email = ManufactureEmail.Create(input);
 
@@ -18,7 +18,7 @@ public class ManufactureEmailTests
     }
 
     [Fact]
-    public void Create_normalizes_email_to_lowercase()
+    public void Create_MixedCaseEmail_NormalizesToLowercase()
     {
         var email = ManufactureEmail.Create("Test.User@Example.COM");
 
@@ -26,7 +26,7 @@ public class ManufactureEmailTests
     }
 
     [Fact]
-    public void Create_trims_surrounding_whitespace()
+    public void Create_ValueWithSurroundingWhitespace_TrimsWhitespace()
     {
         var email = ManufactureEmail.Create("  test@example.com  ");
 
@@ -37,13 +37,13 @@ public class ManufactureEmailTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Create_throws_when_value_is_empty(string? value)
+    public void Create_EmptyValue_ThrowsManufactureEmailCannotBeEmptyException(string? value)
     {
         Assert.Throws<ManufactureEmailCannotBeEmptyException>(() => ManufactureEmail.Create(value));
     }
 
     [Fact]
-    public void Create_accepts_email_with_maximum_length()
+    public void Create_MaximumLengthEmail_ReturnsEmail()
     {
         var localPart = new string('a', 64);
         var domain = new string('b', 63) + "." + new string('c', 63) + "." + new string('d', 61);
@@ -57,7 +57,7 @@ public class ManufactureEmailTests
     }
 
     [Fact]
-    public void Create_throws_when_email_is_longer_than_maximum_length()
+    public void Create_EmailLongerThanMaximumLength_ThrowsManufactureEmailLengthIsInvalidException()
     {
         var localPart = new string('a', 64);
         var domain = new string('b', 63) + "." + new string('c', 63) + "." + new string('d', 62);
@@ -67,13 +67,13 @@ public class ManufactureEmailTests
     }
 
     [Fact]
-    public void Create_throws_when_email_is_shorter_than_minimum_length()
+    public void Create_EmailShorterThanMinimumLength_ThrowsManufactureEmailLengthIsInvalidException()
     {
         Assert.Throws<ManufactureEmailLengthIsInvalidException>(() => ManufactureEmail.Create("a@b"));
     }
 
     [Fact]
-    public void Create_throws_when_local_part_is_longer_than_64_characters()
+    public void Create_LocalPartLongerThan64Characters_ThrowsManufactureEmailFormatIsInvalidException()
     {
         var value = new string('a', 65) + "@example.com";
 
@@ -95,13 +95,13 @@ public class ManufactureEmailTests
     [InlineData("user@example..com")]
     [InlineData("user@example.c")]
     [InlineData("user@example.123")]
-    public void Create_throws_when_format_is_invalid(string value)
+    public void Create_InvalidFormat_ThrowsManufactureEmailFormatIsInvalidException(string value)
     {
         Assert.Throws<ManufactureEmailFormatIsInvalidException>(() => ManufactureEmail.Create(value));
     }
 
     [Fact]
-    public void ManufactureEmails_with_same_value_are_equal()
+    public void Equals_SameValue_ReturnsTrue()
     {
         var first = ManufactureEmail.Create("Test@Example.com");
         var second = ManufactureEmail.Create("test@example.com");
@@ -111,7 +111,7 @@ public class ManufactureEmailTests
     }
 
     [Fact]
-    public void ManufactureEmails_with_different_values_are_not_equal()
+    public void Equals_DifferentValues_ReturnsFalse()
     {
         var first = ManufactureEmail.Create("first@example.com");
         var second = ManufactureEmail.Create("second@example.com");

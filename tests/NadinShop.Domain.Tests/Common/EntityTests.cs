@@ -5,7 +5,7 @@ namespace NadinShop.Domain.Tests.Common;
 public class EntityTests
 {
     [Fact]
-    public void Entities_of_same_type_with_same_id_are_equal()
+    public void Equals_SameTypeAndId_ReturnsTrue()
     {
 
         var id = Guid.NewGuid();
@@ -19,7 +19,7 @@ public class EntityTests
     }
 
     [Fact]
-    public void Entities_with_different_ids_are_not_equals()
+    public void Equals_DifferentIds_ReturnsFalse()
     {
         var firest = new TestEntity(Guid.NewGuid());
         var second = new TestEntity(Guid.NewGuid());
@@ -31,7 +31,7 @@ public class EntityTests
     }
 
     [Fact]
-    public void AggregateRoot_tracks_and_clear_domain_events()
+    public void RaiseAndClear_DomainEvent_TracksThenClearsDomainEvents()
     {
         var aggregate = new TestAggregate(Guid.NewGuid());
         var domainEvent = new TestDomainEvent(DateTimeOffset.Now);

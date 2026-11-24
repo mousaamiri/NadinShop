@@ -13,7 +13,7 @@ public class ProductTests
         Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable);
 
     [Fact]
-    public void Create_sets_the_given_values()
+    public void Create_ValidValues_SetsValues()
     {
         var product = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
 
@@ -24,7 +24,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Create_starts_unavailable_when_requested()
+    public void Create_UnavailableRequested_SetsIsAvailableFalse()
     {
         var product = CreateProduct(isAvailable: false);
 
@@ -32,7 +32,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Create_trims_the_product_name()
+    public void Create_NameWithSurroundingWhitespace_TrimsName()
     {
         var product = Product.Create("  Galaxy S24  ", ValidPhone, ValidEmail, isAvailable: true);
 
@@ -40,7 +40,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Create_sets_produce_date_to_the_current_utc_time()
+    public void Create_ValidValues_SetsProduceDateToCurrentUtcTime()
     {
         var before = DateTime.UtcNow;
 
@@ -51,7 +51,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Create_generates_a_unique_id()
+    public void Create_ValidValues_AssignsUniqueId()
     {
         var first = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
         var second = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
@@ -61,7 +61,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Create_starts_without_domain_events()
+    public void Create_ValidValues_StartsWithoutDomainEvents()
     {
         var product = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
 
@@ -69,7 +69,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Create_throws_when_product_name_is_empty()
+    public void Create_WhitespaceProductName_ThrowsProductNameCannotBeEmptyException()
     {
         Assert.Throws<ProductNameCannotBeEmptyException>(
             () => Product.Create("  ", ValidPhone, ValidEmail, isAvailable: true));
@@ -79,63 +79,63 @@ public class ProductTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Create_throws_when_product_name_is_null_or_whitespace(string? name)
+    public void Create_NullOrWhitespaceProductName_ThrowsProductNameCannotBeEmptyException(string? name)
     {
         Assert.Throws<ProductNameCannotBeEmptyException>(
             () => Product.Create(name!, ValidPhone, ValidEmail, isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_product_name_is_too_short()
+    public void Create_ShortProductName_ThrowsProductNameLengthIsInvalidException()
     {
         Assert.Throws<ProductNameLengthIsInvalidException>(
             () => Product.Create("abc", ValidPhone, ValidEmail, isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_product_name_does_not_start_with_a_latin_letter()
+    public void Create_ProductNameNotStartingWithLatinLetter_ThrowsProductNameFormatIsInvalidException()
     {
         Assert.Throws<ProductNameFormatIsInvalidException>(
             () => Product.Create("1nvalid name", ValidPhone, ValidEmail, isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_manufacture_phone_is_invalid()
+    public void Create_InvalidManufacturePhoneLength_ThrowsManufacturePhoneLengthIsInvalidException()
     {
         Assert.Throws<ManufacturePhoneLengthIsInvalidException>(
             () => Product.Create(ValidName, "123", ValidEmail, isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_manufacture_phone_is_empty()
+    public void Create_EmptyManufacturePhone_ThrowsManufacturePhoneCannotBeEmptyException()
     {
         Assert.Throws<ManufacturePhoneCannotBeEmptyException>(
             () => Product.Create(ValidName, "  ", ValidEmail, isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_manufacture_phone_format_is_invalid()
+    public void Create_InvalidManufacturePhoneFormat_ThrowsManufacturePhoneFormatIsInvalidException()
     {
         Assert.Throws<ManufacturePhoneFormatIsInvalidException>(
             () => Product.Create(ValidName, "0912abc4567", ValidEmail, isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_manufacture_email_is_invalid()
+    public void Create_InvalidManufactureEmailFormat_ThrowsManufactureEmailFormatIsInvalidException()
     {
         Assert.Throws<ManufactureEmailFormatIsInvalidException>(
             () => Product.Create(ValidName, ValidPhone, "plainaddress", isAvailable: true));
     }
 
     [Fact]
-    public void Create_throws_when_manufacture_email_is_empty()
+    public void Create_EmptyManufactureEmail_ThrowsManufactureEmailCannotBeEmptyException()
     {
         Assert.Throws<ManufactureEmailCannotBeEmptyException>(
             () => Product.Create(ValidName, ValidPhone, "  ", isAvailable: true));
     }
 
     [Fact]
-    public void Rename_changes_the_product_name()
+    public void Rename_ValidName_ChangesName()
     {
         var product = CreateProduct();
 
@@ -145,7 +145,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Rename_trims_the_new_name()
+    public void Rename_NameWithSurroundingWhitespace_TrimsName()
     {
         var product = CreateProduct();
 
@@ -155,7 +155,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Rename_keeps_the_name_when_the_value_is_unchanged()
+    public void Rename_SameName_KeepsName()
     {
         var product = CreateProduct();
 
@@ -165,7 +165,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Rename_throws_and_keeps_the_previous_name_when_the_new_name_is_invalid()
+    public void Rename_InvalidName_ThrowsAndKeepsPreviousName()
     {
         var product = CreateProduct();
 
@@ -174,7 +174,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufacturePhone_changes_the_phone()
+    public void ChangeManufacturePhone_ValidPhone_ChangesPhone()
     {
         var product = CreateProduct();
 
@@ -184,7 +184,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufacturePhone_throws_and_keeps_the_previous_phone_when_invalid()
+    public void ChangeManufacturePhone_InvalidPhone_ThrowsAndKeepsPreviousPhone()
     {
         var product = CreateProduct();
 
@@ -194,7 +194,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufactureEmail_changes_and_normalizes_the_email()
+    public void ChangeManufactureEmail_MixedCaseEmail_NormalizesEmail()
     {
         var product = CreateProduct();
 
@@ -204,7 +204,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufactureEmail_throws_and_keeps_the_previous_email_when_invalid()
+    public void ChangeManufactureEmail_InvalidEmail_ThrowsAndKeepsPreviousEmail()
     {
         var product = CreateProduct();
 
@@ -214,7 +214,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufactureContact_updates_both_values()
+    public void ChangeManufactureContact_ValidValues_UpdatesBothValues()
     {
         var product = CreateProduct();
 
@@ -225,7 +225,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufactureContact_does_not_change_anything_when_phone_is_invalid()
+    public void ChangeManufactureContact_InvalidPhone_ThrowsAndKeepsPreviousValues()
     {
         var product = CreateProduct();
 
@@ -237,7 +237,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void ChangeManufactureContact_does_not_change_anything_when_email_is_invalid()
+    public void ChangeManufactureContact_InvalidEmail_ThrowsAndKeepsPreviousValues()
     {
         var product = CreateProduct();
 
@@ -249,7 +249,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void MarkAsAvailable_sets_is_available_to_true()
+    public void MarkAsAvailable_UnavailableProduct_SetsIsAvailableTrue()
     {
         var product = CreateProduct(isAvailable: false);
 
@@ -259,7 +259,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void MarkAsAvailable_is_idempotent()
+    public void MarkAsAvailable_AlreadyAvailableProduct_KeepsIsAvailableTrue()
     {
         var product = CreateProduct(isAvailable: true);
 
@@ -269,7 +269,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void MarkAsUnavailable_sets_is_available_to_false()
+    public void MarkAsUnavailable_AvailableProduct_SetsIsAvailableFalse()
     {
         var product = CreateProduct(isAvailable: true);
 
@@ -279,7 +279,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void MarkAsUnavailable_is_idempotent()
+    public void MarkAsUnavailable_AlreadyUnavailableProduct_KeepsIsAvailableFalse()
     {
         var product = CreateProduct(isAvailable: false);
 
@@ -289,7 +289,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Products_with_different_ids_are_not_equal()
+    public void Equals_DifferentIds_ReturnsFalse()
     {
         var first = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
         var second = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
@@ -299,7 +299,7 @@ public class ProductTests
     }
 
     [Fact]
-    public void Product_is_equal_to_itself()
+    public void Equals_SameReference_ReturnsTrue()
     {
         var product = CreateProduct();
         var sameReference = product;

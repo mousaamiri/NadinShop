@@ -5,7 +5,7 @@ namespace NadinShop.Domain.Tests.Entities.Products.ValueObjects;
 public class ProductNameTests
 {
     [Fact]
-    public void ProductName_stores_the_given_value()
+    public void Constructor_ValidValue_StoresValue()
     {
         const string value = "Samsung Galaxy S24 phone";
 
@@ -15,7 +15,7 @@ public class ProductNameTests
     }
 
     [Fact]
-    public void ProductNames_with_same_value_are_equal()
+    public void Equals_SameValue_ReturnsTrue()
     {
         const string value = "Samsung phone";
         var first = new ProductName(value);
@@ -26,7 +26,7 @@ public class ProductNameTests
     }
 
     [Fact]
-    public void ProductNames_with_different_values_are_not_equal()
+    public void Equals_DifferentValues_ReturnsFalse()
     {
         var first = new ProductName("Samsung phone");
         var second = new ProductName("Apple phone");
@@ -35,7 +35,7 @@ public class ProductNameTests
     }
 
     [Fact]
-    public void ProductName_equality_is_case_sensitive()
+    public void Equals_DifferentCasing_ReturnsFalse()
     {
         var first = new ProductName("Galaxy S24");
         var second = new ProductName("galaxy s24");
@@ -44,7 +44,7 @@ public class ProductNameTests
     }
 
     [Fact]
-    public void ProductName_is_not_equal_to_null()
+    public void Equals_Null_ReturnsFalse()
     {
         var productName = new ProductName("Samsung phone");
 
