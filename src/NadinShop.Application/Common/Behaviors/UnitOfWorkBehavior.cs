@@ -11,9 +11,9 @@ public class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork) : I
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         if (IsNotCommand())
-            return await next();
+            return await next(cancellationToken);
 
-        var response = await next();
+        var response = await next(cancellationToken);
         if (response.IsSuccess)
         {
             try
