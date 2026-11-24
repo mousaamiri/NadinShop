@@ -1,5 +1,5 @@
 using NadinShop.Application.Common.ResultPattern;
-using NadinShop.Application.Features.Users.Commands.Dtos;
+using NadinShop.Application.Features.Identity.Commands.Dtos;
 
 namespace NadinShop.Application.Common.Services;
 
