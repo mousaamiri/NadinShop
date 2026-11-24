@@ -1,4 +1,5 @@
 using FluentValidation;
+using Mapster;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using NadinShop.Application.Common.Behaviors;
@@ -15,6 +16,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
         //Register FluentValidation
         services.AddValidatorsFromAssembly(ApplicationAssemblyReference.Assembly,includeInternalTypes:true);
+        //Register Mapster mappings
+        TypeAdapterConfig.GlobalSettings.Scan(ApplicationAssemblyReference.Assembly);
 
         return services;
     }
