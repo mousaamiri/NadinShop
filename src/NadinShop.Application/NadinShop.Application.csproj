@@ -18,6 +18,7 @@
     <Folder Include="Features\Products\Queries\GetById\" />
     <Folder Include="Features\Products\Queries\Get\" />
     <Folder Include="Features\Identity\Queries\" />
+    <Folder Include="Features\Products\Queries\GetByManufactureEmail\" />
   </ItemGroup>
 
 </Project>
