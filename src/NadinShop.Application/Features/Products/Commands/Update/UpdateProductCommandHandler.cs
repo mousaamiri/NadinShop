@@ -1,4 +1,6 @@
+using Mapster;
 using NadinShop.Application.Common.Interfaces;
+using NadinShop.Application.Common.Mapping;
 using NadinShop.Application.Common.Messaging;
 using NadinShop.Application.Common.ResultPattern;
 using NadinShop.Application.Common.Services;
@@ -40,11 +42,6 @@ public class UpdateProductCommandHandler(
 
         productRepository.Update(product);
 
-        return new UpdateProductResponse(
-            product.Id,
-            product.Name.Value,
-            product.ManufacturePhone.Value,
-            product.ManufactureEmail.Value,
-            product.IsAvailable);
+        return product.Adapt<UpdateProductResponse>(MappingConfig.Config);
     }
 }
