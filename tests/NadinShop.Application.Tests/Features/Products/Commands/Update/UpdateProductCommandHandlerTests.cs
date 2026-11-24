@@ -28,7 +28,7 @@ public class UpdateProductCommandHandlerTests
     {
         using var cancellationTokenSource = new CancellationTokenSource();
         _token = cancellationTokenSource.Token;
-        _currentUser = new CurrentUser(Guid.NewGuid(), "test@example.com", OriginalPhone);
+        _currentUser = new CurrentUser(Guid.NewGuid(), OriginalEmail, OriginalPhone);
         _product = Product.Create(OriginalName, OriginalPhone, OriginalEmail, isAvailable: true);
         _command = new UpdateProductCommand(_product.Id, NewName, IsAvailable: false);
 
@@ -54,8 +54,8 @@ public class UpdateProductCommandHandlerTests
 
         Assert.True(result.IsSuccess);
         Assert.Equal(NewName, _product.Name.Value);
-        Assert.Equal(NewPhone, _product.ManufacturePhone.Value);
-        Assert.Equal("support@nadinshop.com", _product.ManufactureEmail.Value);
+        Assert.Equal(OriginalPhone, _product.ManufacturePhone.Value);
+        Assert.Equal(OriginalEmail.ToLowerInvariant(), _product.ManufactureEmail.Value);
         Assert.False(_product.IsAvailable);
         Assert.Equal(_product.Id, result.Value.Id);
         Assert.Equal(NewName, result.Value.Name);

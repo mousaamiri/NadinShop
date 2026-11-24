@@ -47,15 +47,14 @@ public class RegisterCommandHandlerTests
     {
         _command = new RegisterCommand("existing@example.com", "09121234567", "P@ssw0rd!");
         var error = Error.Conflict("Error.EmailAlreadyExists", "Email is already registered.");
-        var identityService = new Mock<IIdentityService>();
-        identityService
+        _identityService
             .Setup(s => s.CreateUserAsync(
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(Result.Failure<Guid>(error));
-        _handler = new RegisterCommandHandler(identityService.Object);
+        _handler = new RegisterCommandHandler(_identityService.Object);
 
         var result = await _handler.Handle(_command, CancellationToken.None);
 
