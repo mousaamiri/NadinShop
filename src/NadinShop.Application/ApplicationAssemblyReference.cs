@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace NadinShop.Application;
 
-public class ApplicationAssemblyReference
+internal class ApplicationAssemblyReference
 {
-    public static Assembly Assembly => typeof(ApplicationAssemblyReference).Assembly;
+    internal static Assembly Assembly => typeof(ApplicationAssemblyReference).Assembly;
 }
