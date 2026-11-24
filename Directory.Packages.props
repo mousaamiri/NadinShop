@@ -1,21 +1,18 @@
 <Project>
-
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup Label="Persistence">
+    <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.34" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.34" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.34" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.34" />
   </ItemGroup>
-
   <ItemGroup Label="Extensions">
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
   </ItemGroup>
-
   <ItemGroup Label="Testing">
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.34" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
@@ -23,5 +20,4 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
   </ItemGroup>
-
 </Project>
