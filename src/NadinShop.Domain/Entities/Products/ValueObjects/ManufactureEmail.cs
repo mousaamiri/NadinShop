@@ -41,7 +41,7 @@ public sealed class ManufactureEmail : ValueObject<string>
     }
 
     // Local part: allowed atoms separated by single dots (no leading, trailing, or consecutive dots)
-    // Domain: labels separated by dots, no leading/trailing hyphens, TLD is letters only (2 to 63)
+    // Domain: labels separated by dots, no leading/trailing hyphens
 
     public override string ToString() => Value;
 
