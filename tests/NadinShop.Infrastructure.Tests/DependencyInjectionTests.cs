@@ -1,8 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NadinShop.Application.Common.Interfaces;
 using NadinShop.Application.Common.Services;
+using NadinShop.Domain.Entities.Products;
 using NadinShop.Infrastructure;
 using NadinShop.Infrastructure.Data;
+using NadinShop.Infrastructure.Repositories;
 using NadinShop.Infrastructure.Services;
 
 namespace NadinShop.Infrastructure.Tests;
@@ -34,6 +37,9 @@ public class DependencyInjectionTests
         Assert.IsType<CurrentUserService>(scopedProvider.GetRequiredService<ICurrentUserService>());
         Assert.IsType<IdentityService>(scopedProvider.GetRequiredService<IIdentityService>());
         Assert.IsType<JwtTokenService>(scopedProvider.GetRequiredService<IJwTokenService>());
+        Assert.IsType<ProductRepository>(scopedProvider.GetRequiredService<IProductRepository>());
+        Assert.IsType<UnitOfWork>(scopedProvider.GetRequiredService<IUnitOfWork>());
+        Assert.IsType<Repository<Product, Guid>>(scopedProvider.GetRequiredService<IRepository<Product, Guid>>());
         Assert.NotNull(scopedProvider.GetRequiredService<NadinShopDbContext>());
     }
 

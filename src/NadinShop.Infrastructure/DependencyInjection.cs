@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using NadinShop.Application.Common.Interfaces;
 using NadinShop.Application.Common.Services;
 using NadinShop.Infrastructure.Data;
 using NadinShop.Infrastructure.Data.Entities;
+using NadinShop.Infrastructure.Repositories;
 using NadinShop.Infrastructure.Services;
 
 namespace NadinShop.Infrastructure;
@@ -34,6 +36,10 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IJwTokenService, JwtTokenService>();
+
+        services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
