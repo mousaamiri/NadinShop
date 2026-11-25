@@ -52,7 +52,7 @@ public class ProductConfiguration:IEntityTypeConfiguration<Product>
             .IsUnique();
 
         builder.HasIndex(product => new { product.Name })
-            .HasDatabaseName("IX_Products_Name_ProduceDate")
+            .HasDatabaseName("IX_Products_Name")
             .IsUnique();
     }
 }

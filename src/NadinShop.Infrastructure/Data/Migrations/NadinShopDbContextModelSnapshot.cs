@@ -55,7 +55,7 @@ namespace NadinShop.Infrastructure.Data.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("IX_Products_Name_ProduceDate");
+                        .HasDatabaseName("IX_Products_Name");
 
                     b.HasIndex("ManufactureEmail", "ProduceDate")
                         .IsUnique()
