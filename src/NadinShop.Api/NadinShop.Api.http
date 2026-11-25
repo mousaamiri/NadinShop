@@ -1,6 +1,129 @@
-@NadinShop.Api_HostAddress = http://localhost:5081
+@host = http://localhost:5258
+@email = user@example.com
+@phone = 09121234567
+@password = Password123!
 
-GET {{NadinShop.Api_HostAddress}}/health
+### Health
+GET {{host}}/health
 Accept: application/json
 
-###
+### Register (first run: 201, later runs: 409)
+# @name register
+POST {{host}}/api/users/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "phone": "{{phone}}",
+  "password": "{{password}}"
+}
+
+### Login
+# @name login
+POST {{host}}/api/users/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### Current user
+GET {{host}}/api/users/me
+Authorization: Bearer {{login.response.body.$.accessToken}}
+Accept: application/json
+
+### Create product
+# @name createProduct
+POST {{host}}/api/products
+Authorization: Bearer {{login.response.body.$.accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Product {{$guid}}",
+  "produceDate": "2026-01-01T00:00:00Z"
+}
+
+### Get all products
+GET {{host}}/api/products
+Accept: application/json
+
+### Get product by id
+GET {{host}}/api/products/{{createProduct.response.body.$.id}}
+Accept: application/json
+
+### Get products by manufacture email
+GET {{host}}/api/products/by-manufacture-email?manufactureEmail={{email}}
+Accept: application/json
+
+### Update product
+PUT {{host}}/api/products/{{createProduct.response.body.$.id}}
+Authorization: Bearer {{login.response.body.$.accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Product {{$guid}}",
+  "isAvailable": false
+}
+
+### Delete product
+DELETE {{host}}/api/products/{{createProduct.response.body.$.id}}
+Authorization: Bearer {{login.response.body.$.accessToken}}
+
+### Get deleted product (404)
+GET {{host}}/api/products/{{createProduct.response.body.$.id}}
+Accept: application/json
+
+### Create product without token (401)
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Unauthorized Product",
+  "produceDate": "2026-01-01T00:00:00Z"
+}
+
+### Current user without token (401)
+GET {{host}}/api/users/me
+Accept: application/json
+
+### Duplicate registration (409)
+POST {{host}}/api/users/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "phone": "09129999999",
+  "password": "{{password}}"
+}
+
+### Invalid login (401)
+POST {{host}}/api/users/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "WrongPassword123!"
+}
+
+### Invalid product name (400)
+POST {{host}}/api/products
+Authorization: Bearer {{login.response.body.$.accessToken}}
+Content-Type: application/json
+
+{
+  "name": "1",
+  "produceDate": "2026-01-01T00:00:00Z"
+}
+
+### Unknown product (404)
+GET {{host}}/api/products/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Swagger JSON
+GET {{host}}/swagger/v1/swagger.json
+Accept: application/json
+
+### Scalar
+GET {{host}}/scalar/v1
+Accept: text/html
