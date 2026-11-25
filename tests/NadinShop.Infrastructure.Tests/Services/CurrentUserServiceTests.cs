@@ -64,9 +64,11 @@ public class CurrentUserServiceTests
         var user = new ApplicationUser
         {
             Id = Guid.NewGuid(),
+            UserName = "user@example.com",
+            NormalizedUserName = "USER@EXAMPLE.COM",
             Email = "user@example.com",
             NormalizedEmail = "user@example.com",
-            Phone = "09121234567",
+            PhoneNumber = "09121234567",
             NormalizedPhone = "09121234567",
             PasswordHash = "hash",
             CreatedAtUtc = DateTime.UtcNow
@@ -80,7 +82,7 @@ public class CurrentUserServiceTests
         Assert.NotNull(currentUser);
         Assert.Equal(user.Id, currentUser.UserId);
         Assert.Equal(user.Email, currentUser.Email);
-        Assert.Equal(user.Phone, currentUser.Phone);
+        Assert.Equal(user.PhoneNumber, currentUser.Phone);
     }
 
     [Fact]

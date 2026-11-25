@@ -33,6 +33,8 @@ public sealed class CurrentUserService(
             .AsNoTracking()
             .SingleOrDefaultAsync(candidate => candidate.Id == userId.Value, ct);
 
-        return user is null ? null : new CurrentUser(user.Id, user.Email, user.Phone);
+        return user is null
+            ? null
+            : new CurrentUser(user.Id, user.Email ?? string.Empty, user.PhoneNumber ?? string.Empty);
     }
 }

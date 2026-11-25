@@ -17,6 +17,16 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
             .HasColumnType("uniqueidentifier")
             .ValueGeneratedNever();
 
+        builder.Property(user => user.UserName)
+            .HasColumnName("UserName")
+            .HasColumnType("nvarchar(254)")
+            .IsRequired();
+
+        builder.Property(user => user.NormalizedUserName)
+            .HasColumnName("NormalizedUserName")
+            .HasColumnType("nvarchar(254)")
+            .IsRequired();
+
         builder.Property(user => user.Email)
             .HasColumnName("Email")
             .HasColumnType("nvarchar(254)")
@@ -27,7 +37,7 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
             .HasColumnType("nvarchar(254)")
             .IsRequired();
 
-        builder.Property(user => user.Phone)
+        builder.Property(user => user.PhoneNumber)
             .HasColumnName("Phone")
             .HasColumnType("varchar(24)")
             .IsRequired();
