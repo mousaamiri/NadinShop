@@ -5,4 +5,8 @@ namespace NadinShop.Application.Common.Interfaces;
 public interface IProductRepository : IRepository<Product, Guid>
 {
     Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Product>> ListByManufactureEmailAsync(
+        string manufactureEmail,
+        CancellationToken cancellationToken = default);
 }
