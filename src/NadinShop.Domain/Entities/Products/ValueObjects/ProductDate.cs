@@ -26,7 +26,8 @@ public sealed class ProduceDate:ValueObject<DateTime>
         if (value > DateTime.UtcNow)
             throw new ProduceDateCannotBeInFutureException();
 
-        return new ProduceDate(value);
+        // Stored as a calendar day: the database column is a date, so the time part is dropped.
+        return new ProduceDate(value.Date);
     }
 
     public override string ToString() => Value.ToString("yyyy-MM-dd");

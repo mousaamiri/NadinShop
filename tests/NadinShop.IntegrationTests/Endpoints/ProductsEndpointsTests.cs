@@ -99,6 +99,44 @@ public class ProductsEndpointsTests(ApiFactory factory) : IClassFixture<ApiFacto
     }
 
     [Fact]
+    public async Task CreateProduct_WithSameManufactureEmailAndProduceDate_ReturnsConflict()
+    {
+        var user = await factory.CreateClient().RegisterAndLoginAsync();
+        var client = factory.CreateAuthenticatedClient(user.AccessToken);
+        var produceDate = new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var firstResponse = await client.PostAsJsonAsync(
+            "/api/products",
+            new { name = UniqueProductName(), produceDate });
+        Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
+
+        var secondResponse = await client.PostAsJsonAsync(
+            "/api/products",
+            new { name = UniqueProductName(), produceDate });
+
+        Assert.Equal(HttpStatusCode.Conflict, secondResponse.StatusCode);
+        var problem = await secondResponse.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.Equal("Error.ProductAlreadyExistsForDate", problem!.Extensions["code"]?.ToString());
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithSameManufactureEmailAndDifferentProduceDate_Succeeds()
+    {
+        var user = await factory.CreateClient().RegisterAndLoginAsync();
+        var client = factory.CreateAuthenticatedClient(user.AccessToken);
+
+        var firstResponse = await client.PostAsJsonAsync(
+            "/api/products",
+            new { name = UniqueProductName(), produceDate = new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Utc) });
+        var secondResponse = await client.PostAsJsonAsync(
+            "/api/products",
+            new { name = UniqueProductName(), produceDate = new DateTime(2024, 8, 2, 0, 0, 0, DateTimeKind.Utc) });
+
+        Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, secondResponse.StatusCode);
+    }
+
+    [Fact]
     public async Task GetProductsByManufactureEmail_ReturnsOnlyMatchingProducts()
     {
         var owner = await factory.CreateClient().RegisterAndLoginAsync();

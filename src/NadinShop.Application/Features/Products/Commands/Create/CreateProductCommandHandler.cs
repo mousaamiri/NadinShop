@@ -26,6 +26,15 @@ public class CreateProductCommandHandler(
         if (existingProduct is not null)
             return Error.Conflict("Error.ProductNameAlreadyExists", "A product with the same name already exists.");
 
+        var productExistsForDate = await productRepository.ExistsByManufactureEmailAndProduceDateAsync(
+            currentUser.Email,
+            request.ProduceDate,
+            cancellationToken);
+        if (productExistsForDate)
+            return Error.Conflict(
+                "Error.ProductAlreadyExistsForDate",
+                "A product with the same manufacture email and produce date already exists.");
+
         var product = Product.Create(
             request.Name,
             currentUser.Phone,

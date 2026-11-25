@@ -5,13 +5,21 @@ namespace NadinShop.Domain.Tests.Entities.Products.ValueObjects;
 public class ProduceDateTests
 {
     [Fact]
-    public void Create_ValidDate_StoresDate()
+    public void Create_ValidDate_StoresCalendarDay()
     {
         var date = new DateTime(2024, 5, 20, 10, 30, 0, DateTimeKind.Utc);
 
         var produceDate = ProduceDate.Create(date);
 
-        Assert.Equal(date, produceDate.Value);
+        Assert.Equal(date.Date, produceDate.Value);
+    }
+
+    [Fact]
+    public void Create_DateWithTime_TruncatesTimePart()
+    {
+        var produceDate = ProduceDate.Create(new DateTime(2024, 5, 20, 23, 59, 59, DateTimeKind.Utc));
+
+        Assert.Equal(TimeSpan.Zero, produceDate.Value.TimeOfDay);
     }
 
     [Fact]

@@ -36,6 +36,12 @@ public class CreateProductCommandHandlerTests
         _productRepository
             .Setup(r => r.GetByNameAsync(_command.Name, _token))
             .ReturnsAsync((Product?)null);
+        _productRepository
+            .Setup(r => r.ExistsByManufactureEmailAndProduceDateAsync(
+                It.IsAny<string>(),
+                It.IsAny<DateTime>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
         _handler = new CreateProductCommandHandler(_productRepository.Object, _currentUserService.Object);
     }
@@ -61,6 +67,12 @@ public class CreateProductCommandHandlerTests
         Assert.Equal(ValidName, result.Value.Name);
         Assert.Equal(ValidProduceDate, result.Value.ProduceDate);
         _productRepository.Verify(r => r.GetByNameAsync(_command.Name, _token), Times.Once);
+        _productRepository.Verify(
+            r => r.ExistsByManufactureEmailAndProduceDateAsync(
+                _currentUser.Email,
+                _command.ProduceDate,
+                _token),
+            Times.Once);
         _productRepository.Verify(r => r.Add(It.IsAny<Product>()), Times.Once);
         _productRepository.VerifyNoOtherCalls();
     }
@@ -92,6 +104,24 @@ public class CreateProductCommandHandlerTests
 
         Assert.True(result.IsFailure);
         Assert.Equal(ErrorType.Conflict, result.Error.ErrorType);
+        _productRepository.Verify(r => r.Add(It.IsAny<Product>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_WhenProductExistsForManufactureEmailAndProduceDate_ReturnsConflictAndDoesNotAddProduct()
+    {
+        _productRepository
+            .Setup(r => r.ExistsByManufactureEmailAndProduceDateAsync(
+                _currentUser.Email,
+                _command.ProduceDate,
+                _token))
+            .ReturnsAsync(true);
+
+        var result = await _handler.Handle(_command, _token);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(ErrorType.Conflict, result.Error.ErrorType);
+        Assert.Equal("Error.ProductAlreadyExistsForDate", result.Error.Code);
         _productRepository.Verify(r => r.Add(It.IsAny<Product>()), Times.Never);
     }
 

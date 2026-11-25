@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NadinShop.Domain.Common;
 
 namespace NadinShop.Api.Middleware;
@@ -9,6 +10,7 @@ public sealed partial class ExceptionHandlingMiddleware(
     ILogger<ExceptionHandlingMiddleware> logger)
 {
     private const string DomainErrorCode = "Error.Domain";
+    private const string UniqueConstraintErrorCode = "Error.UniqueConstraintViolation";
     private const string UnexpectedErrorCode = "Error.InternalServerError";
 
     public async Task InvokeAsync(HttpContext context)
@@ -34,6 +36,20 @@ public sealed partial class ExceptionHandlingMiddleware(
                 "Domain rule violation",
                 exception.Message,
                 DomainErrorCode);
+        }
+        catch (DbUpdateException exception)
+        {
+            LogUniqueConstraintViolation(logger, exception, context.Request.Method, context.Request.Path);
+
+            if (context.Response.HasStarted)
+                throw;
+
+            await WriteProblemAsync(
+                context,
+                StatusCodes.Status409Conflict,
+                "Conflict",
+                "The request conflicts with an existing record.",
+                UniqueConstraintErrorCode);
         }
         catch (Exception exception)
         {
@@ -89,5 +105,10 @@ public sealed partial class ExceptionHandlingMiddleware(
     [LoggerMessage(EventId = 3, Level = LogLevel.Error,
         Message = "Unhandled exception while processing {Method} {Path}.")]
     private static partial void LogUnhandledException(ILogger logger, Exception exception,
+        string method, string path);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Warning,
+        Message = "Unique constraint violation while processing {Method} {Path}.")]
+    private static partial void LogUniqueConstraintViolation(ILogger logger, Exception exception,
         string method, string path);
 }

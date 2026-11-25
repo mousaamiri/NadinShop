@@ -9,4 +9,9 @@ public interface IProductRepository : IRepository<Product, Guid>
     Task<IReadOnlyList<Product>> ListByManufactureEmailAsync(
         string manufactureEmail,
         CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsByManufactureEmailAndProduceDateAsync(
+        string manufactureEmail,
+        DateTime produceDate,
+        CancellationToken cancellationToken = default);
 }

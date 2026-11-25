@@ -27,4 +27,17 @@ public class ProductRepository(NadinShopDbContext context) : Repository<Product,
             .Where(product => product.ManufactureEmail.Equals(email))
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<bool> ExistsByManufactureEmailAndProduceDateAsync(
+        string manufactureEmail,
+        DateTime produceDate,
+        CancellationToken cancellationToken = default)
+    {
+        var email = ManufactureEmail.Create(manufactureEmail);
+        var date = ProduceDate.Create(produceDate);
+
+        return await Set.AnyAsync(
+            product => product.ManufactureEmail.Equals(email) && product.ProduceDate.Equals(date),
+            cancellationToken);
+    }
 }
