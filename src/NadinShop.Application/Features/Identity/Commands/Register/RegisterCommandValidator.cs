@@ -25,6 +25,8 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("Phone number is required.")
+            .MaximumLength(ManufacturePhone.MaxStoredLength)
+            .WithMessage($"Phone number must not exceed {ManufacturePhone.MaxStoredLength} characters.")
             .Must(BeValidPhone)
             .WithMessage($"Phone number must contain between {ManufacturePhone.MinLength} and {ManufacturePhone.MaxLength} digits and use a valid format.");
 

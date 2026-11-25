@@ -57,6 +57,14 @@ public class ManufacturePhoneTests
     }
 
     [Fact]
+    public void Create_ValueLongerThanStoredLength_ThrowsManufacturePhoneIsTooLongException()
+    {
+        var value = new string('1', ManufacturePhone.MaxStoredLength + 1);
+
+        Assert.Throws<ManufacturePhoneIsTooLongException>(() => ManufacturePhone.Create(value));
+    }
+
+    [Fact]
     public void Equals_SameValue_ReturnsTrue()
     {
         var first = ManufacturePhone.Create("09121234567");

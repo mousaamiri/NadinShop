@@ -170,7 +170,7 @@ namespace NadinShop.Infrastructure.Data.Migrations
 
                     b.Property<string>("ManufacturePhone")
                         .IsRequired()
-                        .HasColumnType("varchar(24)")
+                        .HasColumnType("varchar(32)")
                         .HasColumnName("ManufacturePhone");
 
                     b.Property<string>("Name")
@@ -251,7 +251,7 @@ namespace NadinShop.Infrastructure.Data.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("varchar(24)")
+                        .HasColumnType("varchar(32)")
                         .HasColumnName("Phone");
 
                     b.Property<bool>("PhoneNumberConfirmed")

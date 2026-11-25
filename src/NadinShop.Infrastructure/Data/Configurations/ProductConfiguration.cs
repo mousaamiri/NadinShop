@@ -33,7 +33,7 @@ public class ProductConfiguration:IEntityTypeConfiguration<Product>
         builder.Property(product => product.ManufacturePhone)
             .HasColumnName("ManufacturePhone")
             .HasConversion(phone => phone.Value, value => ManufacturePhone.Create(value))
-            .HasColumnType("varchar(24)")
+            .HasColumnType("varchar(32)")
             .IsRequired();
 
         builder.Property(product => product.ManufactureEmail)

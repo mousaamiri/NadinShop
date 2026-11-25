@@ -39,7 +39,7 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
 
         builder.Property(user => user.PhoneNumber)
             .HasColumnName("Phone")
-            .HasColumnType("varchar(24)")
+            .HasColumnType("varchar(32)")
             .IsRequired();
 
         builder.Property(user => user.NormalizedPhone)

@@ -7,6 +7,7 @@ public sealed class ManufacturePhone : ValueObject<string>
 {
     public const int MinLength = 7;
     public const int MaxLength = 15;
+    public const int MaxStoredLength = 32;
 
     // Allowed: an optional "+" at the beginning, digits, and separators such as spaces, hyphens, and parentheses
     private static readonly Regex PhoneRegex =
@@ -22,6 +23,9 @@ public sealed class ManufacturePhone : ValueObject<string>
             throw new ManufacturePhoneCannotBeEmptyException();
 
         var trimmed = value.Trim();
+
+        if (trimmed.Length > MaxStoredLength)
+            throw new ManufacturePhoneIsTooLongException(MaxStoredLength);
 
         // We check the length without separators
         var digitsOnly = new string(trimmed.Where(char.IsDigit).ToArray());
@@ -55,3 +59,7 @@ public sealed class ManufacturePhoneLengthIsInvalidException(
 
 public sealed class ManufacturePhoneFormatIsInvalidException()
     : DomainException("The manufacturer's phone number format is invalid.");
+
+public sealed class ManufacturePhoneIsTooLongException(int maxLength)
+    : DomainException(
+        $"The manufacturer's phone number must not exceed {maxLength} characters.");
