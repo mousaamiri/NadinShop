@@ -19,13 +19,11 @@ public static class ApiClientExtensions
         email ??= $"user-{Guid.NewGuid():N}@example.com";
         phone ??= CreatePhoneNumber();
 
-        var registerResponse = await client.PostAsJsonAsync(
-            "/api/users/register",
+        var registerResponse = await client.PostAsJsonAsync("/api/users/register",
             new { email, phone, password });
         registerResponse.EnsureSuccessStatusCode();
 
-        var loginResponse = await client.PostAsJsonAsync(
-            "/api/users/login",
+        var loginResponse = await client.PostAsJsonAsync("/api/users/login",
             new { email, password });
         loginResponse.EnsureSuccessStatusCode();
 
