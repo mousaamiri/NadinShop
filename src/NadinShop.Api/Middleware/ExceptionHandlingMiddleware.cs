@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NadinShop.Api.Extensions;
 using NadinShop.Domain.Common;
 
 namespace NadinShop.Api.Middleware;
@@ -18,6 +19,7 @@ public sealed partial class ExceptionHandlingMiddleware(
         try
         {
             await next(context);
+            await WriteAuthenticationProblemAsync(context);
         }
         catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
         {
@@ -64,6 +66,33 @@ public sealed partial class ExceptionHandlingMiddleware(
                 "An unexpected error occurred.",
                 "An unexpected error occurred while processing the request.",
                 UnexpectedErrorCode);
+        }
+    }
+
+    private static async Task WriteAuthenticationProblemAsync(HttpContext context)
+    {
+        if (context.Response.HasStarted)
+            return;
+
+        switch (context.Response.StatusCode)
+        {
+            case StatusCodes.Status401Unauthorized:
+                await ProblemDetailsResponses.WriteAsync(
+                    context,
+                    StatusCodes.Status401Unauthorized,
+                    "Authentication required",
+                    "Authentication failed: the request has no valid access token. " +
+                    "Sign in again and send the token in the Authorization header as 'Bearer {token}'.",
+                    ProblemDetailsResponses.UnauthenticatedCode);
+                break;
+            case StatusCodes.Status403Forbidden:
+                await ProblemDetailsResponses.WriteAsync(
+                    context,
+                    StatusCodes.Status403Forbidden,
+                    "Access denied",
+                    "You are authenticated but do not have permission to perform this action.",
+                    ProblemDetailsResponses.ForbiddenCode);
+                break;
         }
     }
 

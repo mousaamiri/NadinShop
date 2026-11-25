@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using NadinShop.Application.Common.Services;
 using NadinShop.Application.Features.Identity.Commands.Dtos;
@@ -127,6 +128,60 @@ public class UsersEndpointsTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var response = await client.GetAsync("/api/users/me");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetCurrentUser_WithoutToken_ReturnsAuthenticationProblemDetails()
+    {
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/users/me");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.NotNull(problem);
+        Assert.Equal("Authentication required", problem!.Title);
+        Assert.Equal("Error.Unauthenticated", problem.Extensions["code"]?.ToString());
+        Assert.Contains("access token", problem.Detail, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Register_WithRawNewlineInPassword_ReturnsInvalidJsonProblemDetails()
+    {
+        var client = factory.CreateClient();
+        const string malformedBody =
+            "{\n" +
+            "  \"email\": \"mousa@amiri.com\",\n" +
+            "  \"phone\": \"09906720069\",\n" +
+            "  \"password\": \"1234!Mousa\n" +
+            "\"\n" +
+            "}";
+
+        using var content = new StringContent(malformedBody, Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("/api/users/register", content);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.NotNull(problem);
+        Assert.Equal("Invalid request body", problem!.Title);
+        Assert.Equal("Error.InvalidJson", problem.Extensions["code"]?.ToString());
+        Assert.Contains("line break", problem.Detail, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("request field is required", problem.Detail, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Register_WithEmptyBody_ReturnsInvalidJsonProblemDetails()
+    {
+        var client = factory.CreateClient();
+
+        using var content = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("/api/users/register", content);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.NotNull(problem);
+        Assert.Equal("Invalid request body", problem!.Title);
+        Assert.Equal("Error.InvalidJson", problem.Extensions["code"]?.ToString());
     }
 
     [Fact]
