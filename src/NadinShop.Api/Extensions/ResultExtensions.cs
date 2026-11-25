@@ -10,8 +10,7 @@ public static class ResultExtensions
         => result.IsSuccess ? controller.NoContent() : controller.ToProblem(result.Error);
 
     public static ActionResult<TValue> ToActionResult<TValue>(
-        this ControllerBase controller,
-        Result<TValue> result)
+        this ControllerBase controller, Result<TValue> result)
         => result.IsSuccess ? controller.Ok(result.Value) : controller.ToProblem(result.Error);
 
     public static ObjectResult ToProblem(this ControllerBase controller, Error error)

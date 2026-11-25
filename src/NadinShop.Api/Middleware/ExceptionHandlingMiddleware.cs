@@ -51,12 +51,8 @@ public sealed partial class ExceptionHandlingMiddleware(
         }
     }
 
-    private static async Task WriteProblemAsync(
-        HttpContext context,
-        int statusCode,
-        string title,
-        string detail,
-        string code)
+    private static async Task WriteProblemAsync(HttpContext context, int statusCode,
+        string title, string detail, string code)
     {
         if (context.Response.HasStarted)
             return;
@@ -69,41 +65,29 @@ public sealed partial class ExceptionHandlingMiddleware(
             Status = statusCode,
             Title = title,
             Detail = detail,
-            Instance = context.Request.Path
+            Instance = context.Request.Path,
+            Extensions =
+            {
+                ["code"] = code,
+                ["traceId"] = Activity.Current?.Id ?? context.TraceIdentifier
+            }
         };
 
-        problem.Extensions["code"] = code;
-        problem.Extensions["traceId"] = Activity.Current?.Id ?? context.TraceIdentifier;
-
-        await context.Response.WriteAsJsonAsync(
-            problem,
-            options: null,
-            contentType: "application/problem+json");
+        await context.Response.WriteAsJsonAsync(problem,
+            options: null, contentType: "application/problem+json");
     }
 
-    [LoggerMessage(
-        EventId = 1,
-        Level = LogLevel.Information,
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information,
         Message = "Request {Method} {Path} was cancelled by the client.")]
     private static partial void LogRequestCancelled(ILogger logger, string method, string path);
 
-    [LoggerMessage(
-        EventId = 2,
-        Level = LogLevel.Warning,
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning,
         Message = "Domain rule violation while processing {Method} {Path}.")]
-    private static partial void LogDomainViolation(
-        ILogger logger,
-        Exception exception,
-        string method,
-        string path);
+    private static partial void LogDomainViolation(ILogger logger, Exception exception,
+        string method, string path);
 
-    [LoggerMessage(
-        EventId = 3,
-        Level = LogLevel.Error,
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error,
         Message = "Unhandled exception while processing {Method} {Path}.")]
-    private static partial void LogUnhandledException(
-        ILogger logger,
-        Exception exception,
-        string method,
-        string path);
+    private static partial void LogUnhandledException(ILogger logger, Exception exception,
+        string method, string path);
 }
