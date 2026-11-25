@@ -10,11 +10,11 @@ public class ProductName : ValueObject<string>
     public const short MaxLength = 200;
 
     //Product name validation rules :
-    // - must start with a latin letter
-    // - may contain latin letters,digits , spaces and punctuations
+    // - must start with a letter (any script, including Persian)
+    // - may contain letters, digits, spaces and punctuations
     // - allows multiple consecutive spaces but not consecutive punctuation
     private static readonly Regex TitleRegex = new(
-        @"^[a-zA-Z](?:[a-zA-Z0-9\u200C]+|\s+|\p{P}(?![\p{P}]))*$",
+        @"^\p{L}(?:[\p{L}\p{N}\u200C]+|\s+|\p{P}(?![\p{P}]))*$",
         RegexOptions.Compiled
     );
 

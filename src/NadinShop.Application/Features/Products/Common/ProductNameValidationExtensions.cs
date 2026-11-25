@@ -7,7 +7,7 @@ namespace NadinShop.Application.Features.Products.Common;
 internal static class ProductNameValidationExtensions
 {
     private static readonly Regex ProductNameRegex = new(
-        @"^[a-zA-Z](?:[a-zA-Z0-9\u200C]+|\s+|\p{P}(?![\p{P}]))*$",
+        @"^\p{L}(?:[\p{L}\p{N}\u200C]+|\s+|\p{P}(?![\p{P}]))*$",
         RegexOptions.Compiled);
 
     public static IRuleBuilderOptions<T, string> ValidProductName<T>(

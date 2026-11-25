@@ -50,4 +50,21 @@ public class ProductNameTests
 
         Assert.False(productName.Equals(null));
     }
+
+    [Theory]
+    [InlineData("گوشی سامسونگ گلکسی")]
+    [InlineData("هدفون بلوتوثی مدل X100")]
+    [InlineData("کیف چرمی‌دوزی‌شده")]
+    public void Create_WithPersianName_ReturnsProductName(string value)
+    {
+        var productName = ProductName.Create(value);
+
+        Assert.Equal(value, productName.Value);
+    }
+
+    [Fact]
+    public void Create_WithPersianNameStartingWithDigit_Throws()
+    {
+        Assert.Throws<ProductNameFormatIsInvalidException>(() => ProductName.Create("1گوشی سامسونگ"));
+    }
 }

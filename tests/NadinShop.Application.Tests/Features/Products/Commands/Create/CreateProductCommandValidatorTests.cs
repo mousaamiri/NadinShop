@@ -16,6 +16,16 @@ public class CreateProductCommandValidatorTests
         Assert.True(result.IsValid);
     }
 
+    [Fact]
+    public void Validate_WithPersianName_ReturnsValid()
+    {
+        var command = new CreateProductCommand("گوشی سامسونگ گلکسی", DateTime.UtcNow.AddDays(-1));
+
+        var result = _validator.Validate(command);
+
+        Assert.True(result.IsValid);
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
