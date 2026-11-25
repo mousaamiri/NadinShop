@@ -4,6 +4,7 @@ using NadinShop.Application.Common.Services;
 using NadinShop.Application.Features.Identity.Commands.Dtos;
 using NadinShop.Application.Features.Products.Commands.Create;
 using NadinShop.Application.Features.Products.Commands.Update;
+using NadinShop.Application.Features.Products.Dtos;
 using NadinShop.Domain.Entities.Products;
 
 namespace NadinShop.Application.Tests.Common.Mapping;
@@ -36,6 +37,21 @@ public class MappingConfigTests
         Assert.Equal(product.ManufacturePhone.Value, response.ManufacturePhone);
         Assert.Equal(product.ManufactureEmail.Value, response.ManufactureEmail);
         Assert.Equal(product.IsAvailable, response.IsAvailable);
+    }
+
+    [Fact]
+    public void Adapt_ProductToProductDto_MapsAllValues()
+    {
+        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", isAvailable: false);
+
+        var dto = product.Adapt<ProductDto>(MappingConfig.Config);
+
+        Assert.Equal(product.Id, dto.Id);
+        Assert.Equal(product.Name.Value, dto.Name);
+        Assert.Equal(product.ManufacturePhone.Value, dto.ManufacturePhone);
+        Assert.Equal(product.ManufactureEmail.Value, dto.ManufactureEmail);
+        Assert.Equal(product.ProduceDate.Value, dto.ProduceDate);
+        Assert.Equal(product.IsAvailable, dto.IsAvailable);
     }
 
     [Fact]
