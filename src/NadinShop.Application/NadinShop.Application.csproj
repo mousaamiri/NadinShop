@@ -13,13 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Common\" />
-    <Folder Include="Features\Products\Commands\Delete\" />
-    <Folder Include="Features\Products\Commands\Update\" />
-    <Folder Include="Features\Products\Dtos\" />
-    <Folder Include="Features\Products\Queries\GetById\" />
-    <Folder Include="Features\Products\Queries\Get\" />
-    <Folder Include="Features\Identity\Queries\" />
-    <Folder Include="Features\Products\Queries\GetByManufactureEmail\" />
   </ItemGroup>
 
 </Project>

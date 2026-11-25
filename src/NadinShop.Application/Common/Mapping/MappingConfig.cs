@@ -3,6 +3,7 @@ using NadinShop.Application.Common.Services;
 using NadinShop.Application.Features.Identity.Commands.Dtos;
 using NadinShop.Application.Features.Products.Commands.Create;
 using NadinShop.Application.Features.Products.Commands.Update;
+using NadinShop.Application.Features.Products.Dtos;
 using NadinShop.Domain.Entities.Products;
 
 namespace NadinShop.Application.Common.Mapping;
@@ -27,6 +28,14 @@ public sealed class MappingConfig : IRegister
             .Map(destination => destination.Name, source => source.Name.Value)
             .Map(destination => destination.ManufacturePhone, source => source.ManufacturePhone.Value)
             .Map(destination => destination.ManufactureEmail, source => source.ManufactureEmail.Value)
+            .Map(destination => destination.IsAvailable, source => source.IsAvailable);
+
+        config.NewConfig<Product, ProductDto>()
+            .Map(destination => destination.Id, source => source.Id)
+            .Map(destination => destination.Name, source => source.Name.Value)
+            .Map(destination => destination.ManufacturePhone, source => source.ManufacturePhone.Value)
+            .Map(destination => destination.ManufactureEmail, source => source.ManufactureEmail.Value)
+            .Map(destination => destination.ProduceDate, source => source.ProduceDate.Value)
             .Map(destination => destination.IsAvailable, source => source.IsAvailable);
 
         config.NewConfig<JwtResult, AuthResponse>()
