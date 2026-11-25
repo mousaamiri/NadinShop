@@ -11,7 +11,7 @@ public class ProductRepositoryTests
     {
         using var dbContext = TestDatabase.Create();
         var repository = new ProductRepository(dbContext);
-        var product = Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", isAvailable: true);
+        var product = Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", DateTime.UtcNow, isAvailable: true);
         repository.Add(product);
         await dbContext.SaveChangesAsync();
 
@@ -37,8 +37,8 @@ public class ProductRepositoryTests
     {
         using var dbContext = TestDatabase.Create();
         var repository = new ProductRepository(dbContext);
-        var matching = Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", isAvailable: true);
-        var other = Product.Create("Monitor Wide", "09121234567", "other@example.com", isAvailable: true);
+        var matching = Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", DateTime.UtcNow, isAvailable: true);
+        var other = Product.Create("Monitor Wide", "09121234567", "other@example.com", DateTime.UtcNow, isAvailable: true);
         repository.Add(matching);
         repository.Add(other);
         await dbContext.SaveChangesAsync();
@@ -54,7 +54,7 @@ public class ProductRepositoryTests
     {
         using var dbContext = TestDatabase.Create();
         var repository = new ProductRepository(dbContext);
-        repository.Add(Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", isAvailable: true));
+        repository.Add(Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", DateTime.UtcNow, isAvailable: true));
         await dbContext.SaveChangesAsync();
 
         var result = await repository.ListByManufactureEmailAsync("missing@example.com");

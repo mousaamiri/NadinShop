@@ -12,6 +12,7 @@ public class CreateProductCommandHandlerTests
     private const string ValidName = "Galaxy S24";
     private const string ValidPhone = "09121234567";
     private const string ValidEmail = "Test@Example.com";
+    private static readonly DateTime ValidProduceDate = new(2024, 8, 1);
 
     private readonly CreateProductCommand _command;
     private readonly CancellationToken _token;
@@ -22,7 +23,7 @@ public class CreateProductCommandHandlerTests
 
     public CreateProductCommandHandlerTests()
     {
-        _command = new CreateProductCommand(ValidName, DateTime.UtcNow);
+        _command = new CreateProductCommand(ValidName, ValidProduceDate);
         using var cancellationTokenSource = new CancellationTokenSource();
         _token = cancellationTokenSource.Token;
         _currentUser = new CurrentUser(Guid.NewGuid(), "test@example.com", ValidPhone);
@@ -54,9 +55,11 @@ public class CreateProductCommandHandlerTests
         Assert.Equal(ValidName, addedProduct!.Name.Value);
         Assert.Equal(ValidPhone, addedProduct.ManufacturePhone.Value);
         Assert.Equal("test@example.com", addedProduct.ManufactureEmail.Value);
+        Assert.Equal(ValidProduceDate, addedProduct.ProduceDate.Value);
         Assert.True(addedProduct.IsAvailable);
         Assert.Equal(addedProduct.Id, result.Value.Id);
         Assert.Equal(ValidName, result.Value.Name);
+        Assert.Equal(ValidProduceDate, result.Value.ProduceDate);
         _productRepository.Verify(r => r.GetByNameAsync(_command.Name, _token), Times.Once);
         _productRepository.Verify(r => r.Add(It.IsAny<Product>()), Times.Once);
         _productRepository.VerifyNoOtherCalls();
@@ -80,7 +83,7 @@ public class CreateProductCommandHandlerTests
     [Fact]
     public async Task Handle_WhenProductNameAlreadyExists_ReturnsConflictAndDoesNotAddProduct()
     {
-        var existingProduct = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
+        var existingProduct = Product.Create(ValidName, ValidPhone, ValidEmail, DateTime.UtcNow, isAvailable: true);
         _productRepository
             .Setup(r => r.GetByNameAsync(_command.Name, _token))
             .ReturnsAsync(existingProduct);

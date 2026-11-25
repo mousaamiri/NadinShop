@@ -25,7 +25,7 @@ public class DeleteProductCommandHandlerTests
         using var cancellationTokenSource = new CancellationTokenSource();
         _token = cancellationTokenSource.Token;
         _currentUser = new CurrentUser(Guid.NewGuid(), "test@example.com", ValidPhone);
-        _product = Product.Create("Galaxy S24", ValidPhone, ValidEmail, isAvailable: true);
+        _product = Product.Create("Galaxy S24", ValidPhone, ValidEmail, DateTime.UtcNow, isAvailable: true);
         _command = new DeleteProductCommand(_product.Id);
 
         _productRepository = new Mock<IProductRepository>();

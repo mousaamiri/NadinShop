@@ -18,7 +18,7 @@ public class GetProductByIdQueryHandlerTests
     {
         using var cancellationTokenSource = new CancellationTokenSource();
         _token = cancellationTokenSource.Token;
-        _product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", isAvailable: true);
+        _product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", DateTime.UtcNow, isAvailable: true);
         _query = new GetProductByIdQuery(_product.Id);
 
         _productRepository = new Mock<IProductRepository>();

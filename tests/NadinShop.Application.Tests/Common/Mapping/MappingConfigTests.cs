@@ -14,7 +14,7 @@ public class MappingConfigTests
     [Fact]
     public void Adapt_ProductToCreateProductResponse_MapsAllValues()
     {
-        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", isAvailable: true);
+        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", DateTime.UtcNow, isAvailable: true);
 
         var response = product.Adapt<CreateProductResponse>(MappingConfig.Config);
 
@@ -28,7 +28,7 @@ public class MappingConfigTests
     [Fact]
     public void Adapt_ProductToUpdateProductResponse_MapsAllValues()
     {
-        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", isAvailable: false);
+        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", DateTime.UtcNow, isAvailable: false);
 
         var response = product.Adapt<UpdateProductResponse>(MappingConfig.Config);
 
@@ -42,7 +42,7 @@ public class MappingConfigTests
     [Fact]
     public void Adapt_ProductToProductDto_MapsAllValues()
     {
-        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", isAvailable: false);
+        var product = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", DateTime.UtcNow, isAvailable: false);
 
         var dto = product.Adapt<ProductDto>(MappingConfig.Config);
 

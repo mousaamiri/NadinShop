@@ -8,18 +8,20 @@ public class ProductTests
     private const string ValidName = "Galaxy S24";
     private const string ValidPhone = "09121234567";
     private const string ValidEmail = "Test@Example.com";
+    private static readonly DateTime ValidProduceDate = new(2024, 8, 1);
 
     private static Product CreateProduct(bool isAvailable = true) =>
-        Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable);
+        Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable);
 
     [Fact]
     public void Create_ValidValues_SetsValues()
     {
-        var product = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
+        var product = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
 
         Assert.Equal(ValidName, product.Name.Value);
         Assert.Equal(ValidPhone, product.ManufacturePhone.Value);
         Assert.Equal("test@example.com", product.ManufactureEmail.Value);
+        Assert.Equal(ValidProduceDate, product.ProduceDate.Value);
         Assert.True(product.IsAvailable);
     }
 
@@ -34,27 +36,24 @@ public class ProductTests
     [Fact]
     public void Create_NameWithSurroundingWhitespace_TrimsName()
     {
-        var product = Product.Create("  Galaxy S24  ", ValidPhone, ValidEmail, isAvailable: true);
+        var product = Product.Create("  Galaxy S24  ", ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
 
         Assert.Equal(ValidName, product.Name.Value);
     }
 
     [Fact]
-    public void Create_ValidValues_SetsProduceDateToCurrentUtcTime()
+    public void Create_WithProduceDate_SetsProduceDate()
     {
-        var before = DateTime.UtcNow;
+        var product = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
 
-        var product = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
-
-        var after = DateTime.UtcNow;
-        Assert.InRange(product.ProduceDate.Value, before, after);
+        Assert.Equal(ValidProduceDate, product.ProduceDate.Value);
     }
 
     [Fact]
     public void Create_ValidValues_AssignsUniqueId()
     {
-        var first = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
-        var second = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
+        var first = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
+        var second = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
 
         Assert.NotEqual(Guid.Empty, first.Id);
         Assert.NotEqual(first.Id, second.Id);
@@ -63,7 +62,7 @@ public class ProductTests
     [Fact]
     public void Create_ValidValues_StartsWithoutDomainEvents()
     {
-        var product = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
+        var product = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
 
         Assert.Empty(product.DomainEvents);
     }
@@ -72,7 +71,7 @@ public class ProductTests
     public void Create_WhitespaceProductName_ThrowsProductNameCannotBeEmptyException()
     {
         Assert.Throws<ProductNameCannotBeEmptyException>(
-            () => Product.Create("  ", ValidPhone, ValidEmail, isAvailable: true));
+            () => Product.Create("  ", ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Theory]
@@ -82,56 +81,56 @@ public class ProductTests
     public void Create_NullOrWhitespaceProductName_ThrowsProductNameCannotBeEmptyException(string? name)
     {
         Assert.Throws<ProductNameCannotBeEmptyException>(
-            () => Product.Create(name!, ValidPhone, ValidEmail, isAvailable: true));
+            () => Product.Create(name!, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_ShortProductName_ThrowsProductNameLengthIsInvalidException()
     {
         Assert.Throws<ProductNameLengthIsInvalidException>(
-            () => Product.Create("abc", ValidPhone, ValidEmail, isAvailable: true));
+            () => Product.Create("abc", ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_ProductNameNotStartingWithLatinLetter_ThrowsProductNameFormatIsInvalidException()
     {
         Assert.Throws<ProductNameFormatIsInvalidException>(
-            () => Product.Create("1nvalid name", ValidPhone, ValidEmail, isAvailable: true));
+            () => Product.Create("1nvalid name", ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_InvalidManufacturePhoneLength_ThrowsManufacturePhoneLengthIsInvalidException()
     {
         Assert.Throws<ManufacturePhoneLengthIsInvalidException>(
-            () => Product.Create(ValidName, "123", ValidEmail, isAvailable: true));
+            () => Product.Create(ValidName, "123", ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_EmptyManufacturePhone_ThrowsManufacturePhoneCannotBeEmptyException()
     {
         Assert.Throws<ManufacturePhoneCannotBeEmptyException>(
-            () => Product.Create(ValidName, "  ", ValidEmail, isAvailable: true));
+            () => Product.Create(ValidName, "  ", ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_InvalidManufacturePhoneFormat_ThrowsManufacturePhoneFormatIsInvalidException()
     {
         Assert.Throws<ManufacturePhoneFormatIsInvalidException>(
-            () => Product.Create(ValidName, "0912abc4567", ValidEmail, isAvailable: true));
+            () => Product.Create(ValidName, "0912abc4567", ValidEmail, ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_InvalidManufactureEmailFormat_ThrowsManufactureEmailFormatIsInvalidException()
     {
         Assert.Throws<ManufactureEmailFormatIsInvalidException>(
-            () => Product.Create(ValidName, ValidPhone, "plainaddress", isAvailable: true));
+            () => Product.Create(ValidName, ValidPhone, "plainaddress", ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
     public void Create_EmptyManufactureEmail_ThrowsManufactureEmailCannotBeEmptyException()
     {
         Assert.Throws<ManufactureEmailCannotBeEmptyException>(
-            () => Product.Create(ValidName, ValidPhone, "  ", isAvailable: true));
+            () => Product.Create(ValidName, ValidPhone, "  ", ValidProduceDate, isAvailable: true));
     }
 
     [Fact]
@@ -291,8 +290,8 @@ public class ProductTests
     [Fact]
     public void Equals_DifferentIds_ReturnsFalse()
     {
-        var first = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
-        var second = Product.Create(ValidName, ValidPhone, ValidEmail, isAvailable: true);
+        var first = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
+        var second = Product.Create(ValidName, ValidPhone, ValidEmail, ValidProduceDate, isAvailable: true);
 
         Assert.NotEqual(first, second);
         Assert.True(first != second);

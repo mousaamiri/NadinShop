@@ -23,8 +23,8 @@ public class GetProductsQueryHandlerTests
     [Fact]
     public async Task Handle_WhenProductsExist_ReturnsMappedProducts()
     {
-        var firstProduct = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", isAvailable: true);
-        var secondProduct = Product.Create("iPhone 15 Pro", "09351234567", "Support@NadinShop.COM", isAvailable: false);
+        var firstProduct = Product.Create("Galaxy S24", "09121234567", "Test@Example.com", DateTime.UtcNow, isAvailable: true);
+        var secondProduct = Product.Create("iPhone 15 Pro", "09351234567", "Support@NadinShop.COM", DateTime.UtcNow, isAvailable: false);
         _productRepository
             .Setup(r => r.ListAsync(_token))
             .ReturnsAsync([firstProduct, secondProduct]);

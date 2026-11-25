@@ -33,11 +33,12 @@ public class Product:AggregateRoot<Guid>
         string name,
         string manufacturePhone,
         string manufactureEmail,
+        DateTime produceDate,
         bool isAvailable)
     {
         return new Product(
             ProductName.Create(name),
-            ProduceDate.Create(DateTime.UtcNow),
+            ProduceDate.Create(produceDate),
             ManufacturePhone.Create(manufacturePhone),
             ManufactureEmail.Create(manufactureEmail),
             isAvailable);

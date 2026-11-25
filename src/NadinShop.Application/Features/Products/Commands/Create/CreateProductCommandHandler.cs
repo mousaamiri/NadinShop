@@ -30,6 +30,7 @@ public class CreateProductCommandHandler(
             request.Name,
             currentUser.Phone,
             currentUser.Email,
+            request.ProduceDate,
             isAvailable: true);
 
         productRepository.Add(product);

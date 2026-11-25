@@ -29,7 +29,7 @@ public class UpdateProductCommandHandlerTests
         using var cancellationTokenSource = new CancellationTokenSource();
         _token = cancellationTokenSource.Token;
         _currentUser = new CurrentUser(Guid.NewGuid(), OriginalEmail, OriginalPhone);
-        _product = Product.Create(OriginalName, OriginalPhone, OriginalEmail, isAvailable: true);
+        _product = Product.Create(OriginalName, OriginalPhone, OriginalEmail, DateTime.UtcNow, isAvailable: true);
         _command = new UpdateProductCommand(_product.Id, NewName, IsAvailable: false);
 
         _productRepository = new Mock<IProductRepository>();
@@ -131,7 +131,7 @@ public class UpdateProductCommandHandlerTests
     [Fact]
     public async Task Handle_WhenNewNameBelongsToAnotherProduct_ReturnsConflictAndKeepsProductUnchanged()
     {
-        var otherProduct = Product.Create(NewName, NewPhone, NewEmail, isAvailable: true);
+        var otherProduct = Product.Create(NewName, NewPhone, NewEmail, DateTime.UtcNow, isAvailable: true);
         _productRepository
             .Setup(r => r.GetByNameAsync(_command.Name, _token))
             .ReturnsAsync(otherProduct);

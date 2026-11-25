@@ -58,10 +58,11 @@ public class ProductsEndpointsTests(ApiFactory factory) : IClassFixture<ApiFacto
         var user = await factory.CreateClient().RegisterAndLoginAsync();
         var client = factory.CreateAuthenticatedClient(user.AccessToken);
         var name = UniqueProductName();
+        var produceDate = new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Utc);
 
         var createResponse = await client.PostAsJsonAsync(
             "/api/products",
-            new { name, produceDate = DateTime.UtcNow });
+            new { name, produceDate });
 
         Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
         var created = await createResponse.Content.ReadFromJsonAsync<CreateProductResponse>();
@@ -69,6 +70,7 @@ public class ProductsEndpointsTests(ApiFactory factory) : IClassFixture<ApiFacto
         Assert.Equal(name, created!.Name);
         Assert.Equal(user.Phone, created.ManufacturePhone);
         Assert.Equal(user.Email, created.ManufactureEmail);
+        Assert.Equal(produceDate, created.ProduceDate);
 
         var getResponse = await client.GetAsync($"/api/products/{created.Id}");
 
@@ -77,6 +79,7 @@ public class ProductsEndpointsTests(ApiFactory factory) : IClassFixture<ApiFacto
         Assert.NotNull(product);
         Assert.Equal(created.Id, product!.Id);
         Assert.Equal(name, product.Name);
+        Assert.Equal(produceDate, product.ProduceDate);
         Assert.True(product.IsAvailable);
     }
 

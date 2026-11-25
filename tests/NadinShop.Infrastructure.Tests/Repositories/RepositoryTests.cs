@@ -94,6 +94,6 @@ public class RepositoryTests
 
     private static Product CreateProduct(string name)
     {
-        return Product.Create(name, "09121234567", "manufacturer@example.com", isAvailable: true);
+        return Product.Create(name, "09121234567", "manufacturer@example.com", DateTime.UtcNow, isAvailable: true);
     }
 }

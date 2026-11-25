@@ -27,7 +27,7 @@ public class GetProductsByManufactureEmailQueryHandlerTests
     [Fact]
     public async Task Handle_WhenMatchingProductsExist_ReturnsMappedProducts()
     {
-        var product = Product.Create("Galaxy S24", "09121234567", ManufactureEmail, isAvailable: true);
+        var product = Product.Create("Galaxy S24", "09121234567", ManufactureEmail, DateTime.UtcNow, isAvailable: true);
         _productRepository
             .Setup(r => r.ListByManufactureEmailAsync(_query.ManufactureEmail, _token))
             .ReturnsAsync([product]);

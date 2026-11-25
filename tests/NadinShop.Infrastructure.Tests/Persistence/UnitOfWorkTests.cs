@@ -12,7 +12,7 @@ public class UnitOfWorkTests
         using var dbContext = TestDatabase.Create();
         var unitOfWork = new UnitOfWork(dbContext);
         dbContext.Set<Product>().Add(
-            Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", isAvailable: true));
+            Product.Create("Laptop Pro", "09121234567", "manufacturer@example.com", DateTime.UtcNow, isAvailable: true));
 
         var affectedRows = await unitOfWork.SaveChangesAsync();
 
