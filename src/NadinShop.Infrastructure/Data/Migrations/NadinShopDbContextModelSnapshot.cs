@@ -22,7 +22,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
@@ -154,8 +153,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-=======
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
             modelBuilder.Entity("NadinShop.Domain.Entities.Products.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -173,11 +170,7 @@ namespace NadinShop.Infrastructure.Data.Migrations
 
                     b.Property<string>("ManufacturePhone")
                         .IsRequired()
-<<<<<<< HEAD
                         .HasColumnType("varchar(32)")
-=======
-                        .HasColumnType("varchar(24)")
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
                         .HasColumnName("ManufacturePhone");
 
                     b.Property<string>("Name")
@@ -193,11 +186,7 @@ namespace NadinShop.Infrastructure.Data.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique()
-<<<<<<< HEAD
                         .HasDatabaseName("IX_Products_Name");
-=======
-                        .HasDatabaseName("IX_Products_Name_ProduceDate");
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
 
                     b.HasIndex("ManufactureEmail", "ProduceDate")
                         .IsUnique()
@@ -212,7 +201,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("Id");
 
-<<<<<<< HEAD
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
@@ -220,15 +208,12 @@ namespace NadinShop.Infrastructure.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-=======
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2")
                         .HasColumnName("CreatedAtUtc");
 
                     b.Property<string>("Email")
                         .IsRequired()
-<<<<<<< HEAD
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(254)")
                         .HasColumnName("Email");
@@ -245,13 +230,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
                         .HasMaxLength(256)
-=======
-                        .HasColumnType("nvarchar(254)")
-                        .HasColumnName("Email");
-
-                    b.Property<string>("NormalizedEmail")
-                        .IsRequired()
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
                         .HasColumnType("nvarchar(254)")
                         .HasColumnName("NormalizedEmail");
 
@@ -260,21 +238,17 @@ namespace NadinShop.Infrastructure.Data.Migrations
                         .HasColumnType("varchar(24)")
                         .HasColumnName("NormalizedPhone");
 
-<<<<<<< HEAD
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(254)")
                         .HasColumnName("NormalizedUserName");
 
-=======
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(512)")
                         .HasColumnName("PasswordHash");
 
-<<<<<<< HEAD
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("varchar(32)")
@@ -295,13 +269,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(254)")
                         .HasColumnName("UserName");
 
-=======
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("varchar(24)")
-                        .HasColumnName("Phone");
-
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -312,7 +279,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Users_NormalizedPhone");
 
-<<<<<<< HEAD
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
@@ -370,10 +336,6 @@ namespace NadinShop.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
-=======
-                    b.ToTable("Users", (string)null);
-                });
->>>>>>> 202902e (chore(infrastructure): add initial EF Core migration)
 #pragma warning restore 612, 618
         }
     }
