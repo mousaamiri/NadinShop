@@ -31,7 +31,7 @@ docs/
 
 ## تنظیمات (appsettings)
 
-فایل `appsettings.json` حاوی اطلاعات محیطی و کلیدهای امنیتی است و همراه پروژه ارسال نمی‌شود. برای اجرای برنامه، ابتدا فایل خودتان را بسازید:
+فایل‌های `appsettings.json` و `appsettings.Development.json` (و هر `appsettings.*.json` دیگر) حاوی اطلاعات محیطی و کلیدهای امنیتی هستند، در `.gitignore` قرار دارند و همراه پروژه ارسال نمی‌شوند. برای اجرای برنامه، ابتدا فایل خودتان را بسازید:
 
 1. فایل نمونه `src/NadinShop.Api/appsettings.Example.json` را کپی کنید و نام آن را به `appsettings.json` تغییر دهید (کنار `NadinShop.Api.csproj`).
 2. مقادیر را با اطلاعات درست محیط خودتان جایگزین کنید:

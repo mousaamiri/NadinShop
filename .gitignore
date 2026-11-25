@@ -53,3 +53,8 @@ coverage*.info
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local configuration files (may contain secrets)
+appsettings.json
+appsettings.*.json
+!appsettings.Example.json
