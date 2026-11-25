@@ -114,7 +114,7 @@ public class UpdateProductCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenManufacturePhoneBelongsToAnotherUser_ReturnsForbiddenAndKeepsProductUnchanged()
+    public async Task Handle_WhenManufacturePhoneDiffersButEmailMatches_UpdatesProduct()
     {
         _currentUserService
             .Setup(s => s.GetCurrentUserAsync(_token))
@@ -122,10 +122,9 @@ public class UpdateProductCommandHandlerTests
 
         var result = await _handler.Handle(_command, _token);
 
-        Assert.True(result.IsFailure);
-        Assert.Equal(ErrorType.Forbidden, result.Error.ErrorType);
-        Assert.Equal(OriginalName, _product.Name.Value);
-        _productRepository.Verify(r => r.Update(It.IsAny<Product>()), Times.Never);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(NewName, _product.Name.Value);
+        _productRepository.Verify(r => r.Update(_product), Times.Once);
     }
 
     [Fact]

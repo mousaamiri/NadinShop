@@ -6,13 +6,13 @@ namespace NadinShop.Application.Features.Products.Common;
 internal static class ProductOwnership
 {
     public static bool IsOwnedBy(Product product, CurrentUser currentUser)
-        => IsContactOf(product.ManufacturePhone.Value, product.ManufactureEmail.Value, currentUser);
+        => IsSameManufactureEmail(product.ManufactureEmail.Value, currentUser.Email);
 
-    public static bool IsContactOf(string phone, string email, CurrentUser currentUser)
-        => string.Equals(NormalizePhone(phone), NormalizePhone(currentUser.Phone), StringComparison.Ordinal) && string.Equals(NormalizeEmail(email), NormalizeEmail(currentUser.Email), StringComparison.Ordinal);
-
-    private static string NormalizePhone(string phone)
-        => new(phone.Where(char.IsDigit).ToArray());
+    public static bool IsSameManufactureEmail(string manufactureEmail, string currentUserEmail)
+        => string.Equals(
+            NormalizeEmail(manufactureEmail),
+            NormalizeEmail(currentUserEmail),
+            StringComparison.Ordinal);
 
     private static string NormalizeEmail(string email)
         => email.Trim().ToLowerInvariant();
